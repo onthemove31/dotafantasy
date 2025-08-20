@@ -88,6 +88,12 @@ class OpenDotaClient:
     async def aclose(self) -> None:
         await self._client.aclose()
 
+    async def __aenter__(self) -> "OpenDotaClient":
+        return self
+
+    async def __aexit__(self, exc_type, exc, tb) -> None:  # type: ignore[no-untyped-def]
+        await self.aclose()
+
     @retry(
         reraise=True,
         retry=retry_if_exception_type(httpx.HTTPStatusError),
