@@ -11,6 +11,7 @@ from sqlalchemy.orm import Session
 from app.clients.opendota import OpenDotaClient
 from app.db.session import Base, engine, SessionLocal
 from app.models.models import Player, Match, MatchPlayer
+from app.utils.patches import normalize_patch, infer_patch_from_time
 
 
 def _utc_from_unix(ts: int | None) -> datetime | None:
@@ -45,7 +46,12 @@ async def ingest(players: str = "top", limit: int = 25) -> None:
                         match_id=details.match_id,
                         start_time=_utc_from_unix(details.start_time),
                         duration=details.duration,
-                        patch=(details.patch or "unknown"),
+                        patch=
+                            normalize_patch(details.patch)
+                            if details.patch
+                            else infer_patch_from_time(
+                                _utc_from_unix(details.start_time) or datetime.now(timezone.utc)
+                            ),
                         radiant_win=details.radiant_win,
                     )
                     db.add(mobj)
@@ -53,9 +59,10 @@ async def ingest(players: str = "top", limit: int = 25) -> None:
                     mobj.start_time = _utc_from_unix(details.start_time)
                     mobj.duration = details.duration
                     if details.patch:
-                        mobj.patch = details.patch
+                        mobj.patch = normalize_patch(details.patch)
                     mobj.radiant_win = details.radiant_win
 
+                # Upsert players and match-player rows
                 for pl in details.players:
                     if pl.account_id is None:
                         continue
