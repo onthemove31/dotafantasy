@@ -45,12 +45,32 @@ class PlayerMatch(BaseModel):
     start_time: Optional[int] = None
 
 
+class MatchPlayerDetails(BaseModel):
+    account_id: Optional[int] = None
+    player_slot: int
+    hero_id: int
+    kills: int = 0
+    deaths: int = 0
+    assists: int = 0
+    gold_per_min: int = Field(0, alias="gold_per_min")
+    xp_per_min: int = Field(0, alias="xp_per_min")
+    last_hits: int = 0
+    denies: int = 0
+    hero_damage: int = 0
+    stuns: float = 0.0
+    obs_placed: int = 0
+    sen_placed: int = 0
+    obs_destroyed: int = 0
+    sen_destroyed: int = 0
+
+
 class MatchDetails(BaseModel):
     match_id: int
     start_time: int
     duration: int
     patch: Optional[str] = Field(default=None)
     radiant_win: bool
+    players: List[MatchPlayerDetails] = Field(default_factory=list)
 
 
 @dataclass

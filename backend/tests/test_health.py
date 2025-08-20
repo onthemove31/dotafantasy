@@ -7,5 +7,4 @@ def test_healthz_ok():
     r = client.get("/healthz")
     assert r.status_code == 200
     data = r.json()
-    assert data["status"] == "ok"
-    assert "timestamp" in data
+    assert data == {"status": "ok"}
