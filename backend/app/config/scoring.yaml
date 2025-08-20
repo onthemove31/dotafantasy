@@ -1,0 +1,9 @@
+kill: 0.30
+death: -0.30
+assist: 0.15
+gpm: 0.003
+xpm: 0.002
+wards_placed: 0.02
+wards_destroyed: 0.03
+stuns: 0.01
+win: 3.0
