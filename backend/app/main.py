@@ -19,6 +19,13 @@ def create_app() -> FastAPI:
     async def healthz() -> dict[str, str]:
         return {"status": "ok"}
 
+    # Routers
+    from app.routers import players_router, heroes_router, predict_router, simulate_router
+    app.include_router(players_router)
+    app.include_router(heroes_router)
+    app.include_router(predict_router)
+    app.include_router(simulate_router)
+
     return app
 
 
