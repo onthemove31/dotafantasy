@@ -1,0 +1,21 @@
+SHELL := /usr/bin/env bash
+
+.PHONY: up down logs fmt lint test train
+
+up:
+	docker compose -f devops/docker-compose.yml up --build
+
+down:
+	docker compose -f devops/docker-compose.yml down -v
+
+logs:
+	docker compose -f devops/docker-compose.yml logs -f --tail=200
+
+fmt:
+	python -m black backend && ruff check --select I --fix backend
+
+lint:
+	ruff check backend && mypy backend && (cd frontend && pnpm lint || true)
+
+test:
+	pytest -q backend

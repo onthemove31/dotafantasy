@@ -1,0 +1,24 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+.env
+
+# Node
+node_modules/
+frontend/node_modules/
+frontend/dist/
+
+# VSCode
+.vscode/
+
+# Python tooling
+.mypy_cache/
+.ruff_cache/
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Docker
+**/.pytest_cache
+**/__pycache__

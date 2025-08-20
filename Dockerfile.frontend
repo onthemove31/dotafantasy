@@ -1,0 +1,17 @@
+# syntax=docker/dockerfile:1.7
+FROM node:20-alpine AS deps
+WORKDIR /app
+COPY frontend/package.json frontend/pnpm-lock.yaml* ./
+RUN corepack enable && corepack prepare pnpm@9.1.0 --activate && pnpm install --frozen-lockfile || true
+
+FROM node:20-alpine AS build
+WORKDIR /app
+COPY --from=deps /app/node_modules ./node_modules
+COPY frontend ./
+RUN corepack enable && corepack prepare pnpm@9.1.0 --activate && pnpm run build
+
+FROM node:20-alpine AS runner
+WORKDIR /app
+COPY --from=build /app/dist ./dist
+EXPOSE 5173
+CMD ["npx", "serve", "-s", "dist", "-l", "5173"]
