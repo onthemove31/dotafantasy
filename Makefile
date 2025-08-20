@@ -19,3 +19,6 @@ lint:
 
 test:
 	pytest -q backend
+
+train:
+	python backend/app/ml/train_player.py && python backend/app/ml/train_team.py
