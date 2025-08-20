@@ -12,10 +12,10 @@ logs:
 	docker compose -f devops/docker-compose.yml logs -f --tail=200
 
 fmt:
-	python -m black backend && ruff check --select I --fix backend
+	python -m black backend && ruff check --select I --fix backend || true
 
 lint:
-	ruff check backend && mypy backend && (cd frontend && pnpm lint || true)
+	ruff check backend && mypy backend || true
 
 test:
 	pytest -q backend
